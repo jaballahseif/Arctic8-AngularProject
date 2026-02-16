@@ -1,0 +1,38 @@
+<div class="details-container" *ngIf="suggestion">
+    <div class="details-card">
+        <div class="details-header">
+            <h1 class="details-title">{{suggestion.title}}</h1>
+            <span class="status-badge" [class]="getClassCss(suggestion.status)">{{suggestion.status}}</span>
+        </div>
+
+        <div class="details-meta">
+            <div class="meta-item">
+                <strong>Catégorie:</strong>
+                <span class="category">{{suggestion.category}}</span>
+            </div>
+            <div class="meta-item">
+                <strong>Date:</strong>
+                <span class="date">{{suggestion.date | date: "dd MMMM yyyy"}}</span>
+            </div>
+            <div class="meta-item">
+                <strong>Likes:</strong>
+                <span class="likes">{{suggestion.nbLikes}}</span>
+            </div>
+        </div>
+
+        <div class="details-description">
+            <h2>Description</h2>
+            <p>{{suggestion.description}}</p>
+        </div>
+
+        <div class="details-actions">
+            <button (click)="backToList()" class="btn-back">← Retour à la liste</button>
+        </div>
+    </div>
+</div>
+
+<div class="not-found" *ngIf="!suggestion">
+    <h2>Suggestion non trouvée</h2>
+    <p>La suggestion avec l'ID {{suggestionId}} n'existe pas.</p>
+    <button (click)="backToList()" class="btn-back">← Retour à la liste</button>
+</div>

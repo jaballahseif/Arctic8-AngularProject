@@ -6,7 +6,6 @@ import { AppComponent } from './app.component';
 
 import { FooterComponent } from './core/footer/footer.component';
 import { HeaderComponent } from './core/header/header.component';
-import { ListSuggestionComponent } from './core/list-suggestion/list-suggestion.component';
 import { FormsModule } from '@angular/forms';
 import { HomeComponent } from './core/home/home.component';
 import { NotfoundComponent } from './core/notfound/notfound.component';
@@ -16,7 +15,6 @@ import { NotfoundComponent } from './core/notfound/notfound.component';
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    ListSuggestionComponent,
     HomeComponent,
     NotfoundComponent
   ],
