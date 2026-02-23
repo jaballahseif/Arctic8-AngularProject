@@ -1,12 +1,32 @@
-<div class="detail-container">
-  <div class="detail-card">
-    <h1 class="detail-title">Suggestion Details</h1>
-    <div class="detail-content">
-      <p class="detail-id">ID: <strong>{{id}}</strong></p>
-      <!-- Add more details if I had them, but only ID is passed for now -->
-    </div>
-    <div class="detail-actions">
-      <button routerLink="/suggestions" class="btn-back">Back to List</button>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow border-0 rounded-4 overflow-hidden">
+        <div class="card-header bg-dark text-white p-4">
+          <h1 class="h3 mb-0">Suggestion Details</h1>
+        </div>
+        <div class="card-body p-4 bg-light">
+          <div
+            class="alert alert-info border-0 shadow-sm d-flex align-items-center"
+          >
+            <span class="me-3 fs-3">ℹ️</span>
+            <div>
+              <p class="mb-0 fs-5">
+                L'identifiant de la suggestion est : <strong>{{ id }}</strong>
+              </p>
+            </div>
+          </div>
+          <!-- Add more details if there were any provided by the component logic -->
+        </div>
+        <div class="card-footer bg-white border-top-0 p-4 text-center">
+          <button
+            routerLink="/suggestions"
+            class="btn btn-outline-secondary rounded-pill px-4 py-2"
+          >
+            <span aria-hidden="true">&larr;</span> Back to List
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

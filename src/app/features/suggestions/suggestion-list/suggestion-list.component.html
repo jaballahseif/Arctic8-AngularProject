@@ -1,48 +1,108 @@
-<div class="list-suggestion-container">
-    <h1 class="page-title">{{titre}}</h1>
-
-    <div class="search-container">
-        <input [(ngModel)]="search_term" type="text" class="search-input" [placeholder]="textPlaceholder" />
-        {{search_term}}
+<div class="container mt-5">
+  <div class="row mb-4 align-items-center">
+    <div class="col-md-6">
+      <h1 class="display-5 fw-bold text-primary mb-0">{{ titre }}</h1>
     </div>
+    <div class="col-md-6">
+      <div class="input-group">
+        <span class="input-group-text bg-white"
+          ><i class="bi bi-search"></i>🔎</span
+        >
+        <input
+          [(ngModel)]="search_term"
+          type="text"
+          class="form-control form-control-lg"
+          [placeholder]="textPlaceholder"
+        />
+      </div>
+      <small class="text-muted" *ngIf="search_term"
+        >Recherche en cours: <strong>{{ search_term }}</strong></small
+      >
+    </div>
+  </div>
 
-    <div class="suggestions-list">
+  <div class="row">
+    <div class="col-12">
+      <div class="d-flex flex-column gap-3">
         <div *ngFor="let s of suggestions">
-            <div class="suggestion-card"
-                *ngIf="s.title.toLocaleLowerCase().includes(search_term.toLocaleLowerCase()) || s.category.toLocaleLowerCase().includes(search_term.toLocaleLowerCase())">
-                <div class="card-header">
-                    <h2 class="suggestion-title">{{s.title}}</h2>
+          <div
+            class="card shadow-sm border-0 h-100"
+            *ngIf="
+              s.title
+                .toLocaleLowerCase()
+                .includes(search_term.toLocaleLowerCase()) ||
+              s.category
+                .toLocaleLowerCase()
+                .includes(search_term.toLocaleLowerCase())
+            "
+          >
+            <div class="card-body position-relative">
+              <span
+                class="badge position-absolute top-0 end-0 m-3"
+                [ngClass]="{
+                  'bg-success': s.status === 'acceptee',
+                  'bg-danger': s.status === 'refusee',
+                  'bg-warning text-dark':
+                    s.status === 'en attente' ||
+                    (s.status !== 'acceptee' && s.status !== 'refusee'),
+                }"
+                >{{ s.status }}</span
+              >
+
+              <h3 class="card-title h5 text-dark mb-1">{{ s.title }}</h3>
+
+              <div class="mb-3">
+                <span class="badge bg-secondary me-2">{{ s.category }}</span>
+                <small class="text-muted"
+                  ><i class="bi bi-calendar"></i>
+                  {{ s.date | date: "dd MMM yyyy" }}</small
+                >
+              </div>
+
+              <p class="card-text text-secondary">{{ s.description }}</p>
+
+              <hr class="text-muted alpha-2" />
+
+              <div
+                *ngIf="s.status != 'refusee'"
+                class="d-flex justify-content-between align-items-center mt-3"
+              >
+                <div>
+                  <button
+                    class="btn btn-outline-danger btn-sm me-2 rounded-pill"
+                    (click)="like(s)"
+                  >
+                    ❤️ {{ s.nbLikes }}
+                  </button>
+                  <button
+                    (click)="addToFavoris()"
+                    class="btn btn-outline-warning btn-sm rounded-pill"
+                  >
+                    ⭐ Favoris
+                  </button>
                 </div>
-
-                <div class="card-meta">
-                    <span class="category">{{s.category}}</span>
-                    <span class="date">{{s.date | date: "dd MMM yyyy"}}</span>
-                </div>
-
-                <p class="suggestion-description">{{s.description}}</p>
-
-                <div class="card-footer">
-                    <!--- <span class="status-badge" [class] = "s.status == 'acceptee' ? 'status-accepted' : s.status == 'refusee' ? 'status-refused' : 'status-pending' "> {{s.status}}
-        </span>----->
-                    <span class="status-badge" [class]="getClassCss(s.status)">{{s.status}}</span>
-
-                    <div *ngIf="s.status!='refusee'" class="action-buttons">
-                        <button class="btn-like" (click)="like(s)">
-                            <span class="icon"></span>
-                            {{s.nbLikes}}
-                        </button>
-                        <button (click)="addToFavoris()" class="btn-favorite">
-                            <span class="icon"></span>
-                            Ajouter aux favoris
-                        </button>
-                        <button [routerLink]="['/suggestions', s.id]" class="btn-details">Détails</button>
-                    </div>
-                </div>
+                <button
+                  [routerLink]="['/suggestions', s.id]"
+                  class="btn btn-primary btn-sm rounded-pill px-3"
+                >
+                  Détails <span aria-hidden="true">&rarr;</span>
+                </button>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
 
-    <div class="suggestion-details-container">
-        <router-outlet></router-outlet>
+        <div
+          *ngIf="suggestions.length === 0"
+          class="text-center py-5 text-muted"
+        >
+          <p class="mb-0">Aucune suggestion trouvée.</p>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div class="mt-5">
+    <router-outlet></router-outlet>
+  </div>
 </div>
