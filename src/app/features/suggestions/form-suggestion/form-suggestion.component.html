@@ -11,17 +11,20 @@
               <label class="form-label fw-bold">Titre</label>
               <input type="text" formControlName="title" class="form-control" />
               <div
-                *ngIf="myform.get('title')?.errors?.['required']"
-                class="invalid-feedback"
+                *ngIf="
+                  myform.get('title')?.touched &&
+                  myform.get('title')?.errors?.['required']
+                "
+                class="text-danger mt-1 small"
               >
                 Titre est obligatoire
               </div>
               <div
                 *ngIf="
-                  myform.get('title')?.errors?.['minlength'] &&
-                  myform.get('title')?.touched
+                  myform.get('title')?.touched &&
+                  myform.get('title')?.errors?.['minlength']
                 "
-                class="invalid-feedback"
+                class="text-danger mt-1 small"
               >
                 Titre doit contenir au moins 3 caractères
               </div>
