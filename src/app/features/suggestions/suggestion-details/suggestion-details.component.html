@@ -13,6 +13,7 @@
               'bg-danger': suggestion.status === 'refusee',
               'bg-warning text-dark':
                 suggestion.status === 'en attente' ||
+                suggestion.status === 'en_attente' ||
                 (suggestion.status !== 'acceptee' &&
                   suggestion.status !== 'refusee'),
             }"

@@ -6,27 +6,28 @@
           <h2 class="h4 mb-0">Ajouter une suggestion</h2>
         </div>
         <div class="card-body">
-          <form [formGroup]="myform">
+          <form class="p-3" [formGroup]="myform" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label class="form-label fw-bold">Titre</label>
-              <input type="text" formControlName="title" class="form-control" />
+              <input formControlName="title" type="text" class="form-control" />
+
               <div
-                *ngIf="
-                  myform.get('title')?.touched &&
-                  myform.get('title')?.errors?.['required']
-                "
                 class="text-danger mt-1 small"
-              >
-                Titre est obligatoire
-              </div>
-              <div
                 *ngIf="
-                  myform.get('title')?.touched &&
-                  myform.get('title')?.errors?.['minlength']
+                  myform.get('title')?.touched && myform.get('title')?.invalid
                 "
-                class="text-danger mt-1 small"
               >
-                Titre doit contenir au moins 3 caractères
+                <div *ngIf="myform.get('title')?.errors?.['required']">
+                  Titre obligatoire.
+                </div>
+                <div *ngIf="myform.get('title')?.errors?.['minlength']">
+                  Minimum
+                  {{ title.errors?.["minlength"].requiredLength }} caractères.
+                </div>
+                <div *ngIf="myform.get('title')?.errors?.['pattern']">
+                  Doit commencer par une majuscule et contenir seulement des
+                  lettres.
+                </div>
               </div>
             </div>
 
@@ -34,51 +35,92 @@
               <label class="form-label fw-bold">Description</label>
               <textarea
                 formControlName="description"
-                class="form-control"
                 rows="4"
-                [ngClass]="{
-                  'is-invalid':
-                    myform.get('description')?.invalid &&
-                    myform.get('description')?.touched,
-                }"
-                placeholder="Détaillez votre suggestion..."
+                class="form-control"
               ></textarea>
+
               <div
+                class="text-danger mt-1 small"
                 *ngIf="
-                  myform.get('description')?.invalid &&
-                  myform.get('description')?.touched
+                  myform.get('description')?.touched &&
+                  myform.get('description')?.invalid
                 "
-                class="invalid-feedback"
               >
-                Description est obligatoire
+                <div *ngIf="myform.get('description')?.errors?.['required']">
+                  Description obligatoire.
+                </div>
+                <div *ngIf="myform.get('description')?.errors?.['minlength']">
+                  Minimum 30 caractères.
+                </div>
               </div>
             </div>
 
             <div class="mb-3">
               <label class="form-label fw-bold">Catégorie</label>
               <select formControlName="category" class="form-select">
-                <option value="">Sélectionner une catégorie</option>
-                <option value="Technologie">Technologie</option>
-                <option value="Événements">Événements</option>
-                <option value="Ressources Humaines">Ressources Humaines</option>
+                <option value="">-- Choisir une catégorie --</option>
+                <option *ngFor="let c of categories" [value]="c">
+                  {{ c }}
+                </option>
               </select>
+
+              <div
+                class="text-danger mt-1 small"
+                *ngIf="
+                  myform.get('category')?.invalid &&
+                  myform.get('category')?.touched
+                "
+              >
+                <div>Catégorie obligatoire.</div>
+              </div>
             </div>
 
             <div class="mb-4">
               <label class="form-label fw-bold">Date</label>
-              <input type="date" formControlName="date" class="form-control" />
+              <input
+                formControlName="date"
+                type="date"
+                class="form-control"
+                readonly
+              />
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label fw-bold">Status</label>
+              <input
+                formControlName="status"
+                type="text"
+                class="form-control"
+                readonly
+              />
             </div>
 
             <div class="d-grid">
               <button
-                type="submit"
                 [disabled]="myform.invalid"
                 class="btn btn-primary btn-lg"
+                type="submit"
               >
-                Ajouter la suggestion
+                {{ id ? "Update" : "Add" }}
               </button>
             </div>
           </form>
+
+          <hr />
+          <div class="text-muted small">
+            <div>
+              valid: {{ myform.get("title")?.valid }} - invalid:
+              {{ myform.get("title")?.invalid }}
+            </div>
+            <div>
+              touched: {{ myform.get("title")?.touched }} - untouched:
+              {{ myform.get("title")?.untouched }}
+            </div>
+            <div>
+              dirty: {{ myform.get("title")?.dirty }} - pristine:
+              {{ myform.get("title")?.pristine }}
+            </div>
+          </div>
         </div>
       </div>
     </div>

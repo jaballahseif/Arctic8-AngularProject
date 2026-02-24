@@ -1,18 +1,58 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Suggestion } from '../../../models/suggestion';
+import { SuggestionService } from '../../../service/suggestion.service';
 
 @Component({
   selector: 'app-suggestion-list',
   templateUrl: './suggestion-list.component.html',
   styleUrl: './suggestion-list.component.css'
 })
-export class SuggestionListComponent {
+export class SuggestionListComponent implements OnInit {
   search_term: string = "";
   titre: string = "Liste des suggestions";
   textPlaceholder: string = "Rechercher une suggestion"
+  suggestions: Suggestion[] = [];
+
+  constructor(private suggestionService: SuggestionService) {}
+
+  ngOnInit(): void {
+    this.loadSuggestions();
+  }
+
+  loadSuggestions(): void {
+    this.suggestionService.getSuggestionsList().subscribe({
+      next: (data) => {
+        this.suggestions = data;
+      },
+      error: (err) => {
+        console.error('Error fetching suggestions', err);
+      }
+    });
+  }
 
   like(sug: Suggestion) {
     sug.nbLikes++;
+    this.suggestionService.updateSuggestion(sug.id, sug).subscribe({
+      next: () => console.log('Suggestion liked!'),
+      error: (err) => {
+        // Revert UI if it fails
+        sug.nbLikes--; 
+        console.error('Error updating suggestion like', err);
+      }
+    });
+  }
+
+  delete(sug: Suggestion) {
+    if(confirm(`Voulez-vous vraiment supprimer la suggestion: ${sug.title} ?`)) {
+      this.suggestionService.deleteSuggestion(sug.id).subscribe({
+        next: () => {
+          this.loadSuggestions();
+        },
+        error: (err) => {
+          console.error('Error deleting suggestion', err);
+        }
+      });
+    }
   }
 
   getClassCss(status: string) {
@@ -29,46 +69,7 @@ export class SuggestionListComponent {
   }
 
   addToFavoris() {
-
+    console.log('Ajouté aux favoris');
   }
-
-  suggestions: Suggestion[] = [
-    {
-      id: 1,
-      title: 'Organiser une journée team building',
-      description: "Suggestion pour organiser une journée de team building pour renforcer les liens entre les membres de l'équipe.",
-      category: 'Événements',
-      date: new Date('2025-01-20'),
-      status: 'acceptee',
-      nbLikes: 10
-    },
-    {
-      id: 2,
-      title: 'Améliorer le système de réservation',
-      description: 'Proposition pour améliorer la gestion des réservations en ligne avec un système de confirmation automatique.',
-      category: 'Technologie',
-      date: new Date('2025-01-15'),
-      status: 'refusee',
-      nbLikes: 0
-    },
-    {
-      id: 3,
-      title: 'Créer un système de récompenses',
-      description: "Mise en place d'un programme de récompenses pour motiver les employés et reconnaître leurs efforts.",
-      category: 'Ressources Humaines',
-      date: new Date('2025-01-25'),
-      status: 'refusee',
-      nbLikes: 0
-    },
-    {
-      id: 4,
-      title: "Moderniser l'interface utilisateur",
-      description: "Refonte complète de l'interface utilisateur pour une meilleure expérience utilisateur.",
-      category: 'Technologie',
-      date: new Date('2025-01-30'),
-      status: 'en_attente',
-      nbLikes: 0
-    },
-  ];
 }
 
