@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Suggestion } from '../../../models/suggestion';
 import { SuggestionService } from '../../../service/suggestion.service';
 
@@ -13,7 +14,10 @@ export class SuggestionListComponent implements OnInit {
   textPlaceholder: string = "Rechercher une suggestion"
   suggestions: Suggestion[] = [];
 
-  constructor(private suggestionService: SuggestionService) {}
+  constructor(
+    private suggestionService: SuggestionService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadSuggestions();
@@ -47,6 +51,10 @@ export class SuggestionListComponent implements OnInit {
       this.suggestionService.deleteSuggestion(sug.id).subscribe({
         next: () => {
           this.loadSuggestions();
+          // Check if the deleted suggestion is currently being viewed
+          if (this.router.url === `/suggestions/${sug.id}`) {
+             this.router.navigate(['/suggestions']);
+          }
         },
         error: (err) => {
           console.error('Error deleting suggestion', err);

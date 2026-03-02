@@ -11,6 +11,7 @@ import { SuggestionService } from '../../../service/suggestion.service';
 export class SuggestionDetailsComponent implements OnInit {
   suggestionId: any;
   suggestion: Suggestion | undefined;
+  isLoading: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,10 +32,12 @@ export class SuggestionDetailsComponent implements OnInit {
             } else {
               this.suggestion = undefined;
             }
+            this.isLoading = false;
          },
          error: (err) => {
             console.error('Error loading suggestion details', err);
             this.suggestion = undefined;
+            this.isLoading = false;
          }
       })
     });
